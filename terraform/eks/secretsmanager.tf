@@ -1,0 +1,161 @@
+resource "aws_secretsmanager_secret" "db_secret" {
+  name =            "iti_gp_db_secret"
+  recovery_window_in_days = 0 #force to delete instantly
+}
+
+resource "aws_secretsmanager_secret_version" "db_secret_version" {
+  secret_id     = aws_secretsmanager_secret.db_secret.id
+  secret_string = jsonencode({
+    username = "admin"
+    password = var.db_password
+  })
+}
+
+
+/*
+                        install secerts inside the kubernetes cluster
+*/
+
+/*resource "helm_release" "secrets_store_csi_driver" {
+  name       = "secrets-store-csi-driver"
+  repository = "https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts"
+  chart      = "secrets-store-csi-driver"
+  namespace  = "kube-system"
+  version    = "1.4.5"
+
+  set {
+    name  = "syncSecret.enabled"
+    value = "true"
+  }
+
+}
+
+resource "helm_release" "csi_aws_provider" {
+  name       = "secrets-provider-aws"
+  repository = "https://aws.github.io/secrets-store-csi-driver-provider-aws"
+  chart      = "secrets-store-csi-driver-provider-aws"
+  namespace  = "kube-system"
+  version    = "0.3.0"
+
+  depends_on = [
+    helm_release.secrets_store_csi_driver
+  ]
+}
+
+
+resource "kubernetes_service_account" "csi_aws_provider_sa" {
+  metadata {
+    name      = "secrets-store-csi-driver-sa"
+    namespace = "kube-system"
+
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.db_secret_role.arn
+    }
+  }
+}*/
+
+/*resource "kubectl_manifest" "mysql_secret_provider" {
+  yaml_body = yamlencode({
+    apiVersion = "secrets-store.csi.x-k8s.io/v1"
+    kind       = "SecretProviderClass"
+    metadata = {
+      name      = "mysql-secret-provider"
+      namespace = kubernetes_namespace.db_ns.metadata[0].name
+    }
+    spec = {
+      provider = "aws"
+
+      parameters = {
+        objects = yamlencode([
+          {
+            objectName = aws_secretsmanager_secret.db_secret.name
+            objectType = "secretsmanager"
+          }
+        ])
+      }
+
+      # Sync to Kubernetes Secret
+      secretObjects = [
+        {
+          secretName = "mysql-credentials"
+          type       = "Opaque"
+          data = [
+            {
+              objectName = aws_secretsmanager_secret.db_secret.name
+              key        = "username"
+            },
+            {
+              objectName = aws_secretsmanager_secret.db_secret.name
+              key        = "password"
+            }
+          ]
+        }
+      ]
+    }
+  })
+}
+
+resource "kubectl_manifest" "mysql_secret_provider_back_ns" {
+
+  yaml_body = yamlencode({
+    apiVersion = "secrets-store.csi.x-k8s.io/v1"
+    kind       = "SecretProviderClass"
+    metadata = {
+      name      = "mysql-secret-provider"
+      namespace = kubernetes_namespace.back_ns.metadata[0].name
+    }
+    spec = {
+      provider = "aws"
+
+      parameters = {
+        objects = yamlencode([
+          {
+            objectName = aws_secretsmanager_secret.db_secret.name
+            objectType = "secretsmanager"
+          }
+        ])
+      }
+
+      # Sync to Kubernetes Secret
+      secretObjects = [
+        {
+          secretName = "mysql-credentials"
+          type       = "Opaque"
+          data = [
+            {
+              objectName = aws_secretsmanager_secret.db_secret.name
+              key        = "username"
+            },
+            {
+              objectName = aws_secretsmanager_secret.db_secret.name
+              key        = "password"
+            }
+          ]
+        }
+      ]
+    }
+  })
+}*/
+
+#service account to attach to mysql pod
+/*resource "kubernetes_service_account" "db_secret_sa" {
+  metadata {
+    name      = "db-secret-sa"
+    namespace = "db-ns"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${aws_iam_role.db_secret_role.name}"
+    }
+  }
+} 
+
+
+#service account to attach to backend pods
+resource "kubernetes_service_account" "db_secret_sa_back" {
+  metadata {
+    name      = "db-secret-sa"
+    namespace = "back-ns"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${aws_iam_role.db_secret_role.name}"
+    }
+  }
+} */
