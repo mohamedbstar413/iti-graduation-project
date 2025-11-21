@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/iti-graduation-project
     targetRevision: main
-    path: 
+    path: argocd/argocd-applications
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc

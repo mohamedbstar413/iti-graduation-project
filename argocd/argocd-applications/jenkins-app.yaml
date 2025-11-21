@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # as it depends on jenkins-pv and jenkins-pvc
+spec:
+  project: default
+  source:
+    repoURL: https://charts.jenkins.io
+    targetRevision: 4.7.2
+    chart: jenkins
+    helm:
+      releaseName: jenkins
+      values: |
+        controller:
+          
+          adminUser: admin
+          adminPassword: admin
+          jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
+          
+          persistence:
+            existingClaim: jenkins-pvc
+          
+          customInitContainers:
+            - name: pv-permission-fixer
+              image: busybox:latest
+              command: ["sh", "-c"]
+              args: ["chmod -R 777 /var/jenkins_home && chown -R 1000:1000 /var/jenkins_home && echo 'Permissions fixed'"]
+              volumeMounts:
+                - name: jenkins-home
+                  mountPath: /var/jenkins_home
+              securityContext:
+                runAsUser: 0  
+                runAsNonRoot: false
+                runAsGroup: 0
+                allowPrivilegeEscalation: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
