@@ -22,7 +22,8 @@ spec:
           existingClaim: jenkins-pvc
         
         controller:
-          imageTag: 2.462.1                 # ← REQUIRED for your plugins
+          image:
+            tag: 2.462.1                 # ← REQUIRED for your plugins
           overwriteConfig: true
           installPlugins: false
           
