@@ -5,6 +5,10 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2" # as it depends on jenkins-pv and jenkins-pvc
+    argocd.argoproj.io/sync-options: SkipPrune=false
+    argocd.argoproj.io/compare-options: IgnoreNormalizedCRDs=true
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
