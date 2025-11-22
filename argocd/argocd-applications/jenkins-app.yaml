@@ -21,8 +21,10 @@ spec:
           jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
           
           persistence:
+            enabled: true
             existingClaim: jenkins-pvc
-          
+            storageClass: ""
+            
           customInitContainers:
             - name: pv-permission-fixer
               image: busybox:latest
