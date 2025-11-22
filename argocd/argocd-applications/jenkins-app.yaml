@@ -24,6 +24,7 @@ spec:
           existingClaim: jenkins-pvc
 
         controller:
+          overwriteConfig: true
           admin:
             username: admin
             password: admin
