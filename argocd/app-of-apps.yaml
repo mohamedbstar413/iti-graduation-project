@@ -9,7 +9,7 @@ spec:
         repoURL: https://github.com/mohamedbstar413/iti-graduation-project.git
         revision: main
         files:
-          - path: "argocd/argocd-applications/**/*.yaml"
+          - path: "argocd/argocd-applications/*.yaml"
   template:
     metadata:
       name: '{{path.basename}}'
