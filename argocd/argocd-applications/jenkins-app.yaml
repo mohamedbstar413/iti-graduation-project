@@ -24,8 +24,6 @@ spec:
           existingClaim: jenkins-pvc
 
         controller:
-          image: jenkins/jenkins
-          imageTag: 2.462.1
           overwriteConfig: true
           admin:
             username: admin
