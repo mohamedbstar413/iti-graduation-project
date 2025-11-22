@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jenkins-app
+  name: jenkins
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # as it depends on jenkins-pv and jenkins-pvc
+    argocd.argoproj.io/sync-wave: "2"
     argocd.argoproj.io/sync-options: SkipPrune=false
     argocd.argoproj.io/compare-options: IgnoreNormalizedCRDs=true
   finalizers:
@@ -14,26 +14,25 @@ spec:
   source:
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: 5.0.0          # ← exactly this version
+    targetRevision: 5.1.0          # stable chart version
     helm:
       releaseName: jenkins
       values: |
-        # Top-level persistence = always respected in 5.x
+        # Persistent storage
         persistence:
           enabled: true
           existingClaim: jenkins-pvc
 
+        # Jenkins controller configuration
         controller:
-          overwriteConfig: true
-          admin:
-            username: admin
-            password: admin
+          runAsUser: 1000
+          fsGroup: 1000
+          adminUser: admin
+          adminPassword: admin
 
-          jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
-
-          # This is the correct key in chart 5.0.0+
+          # Custom init container to fix permissions
           additionalInitContainers:
-            - name: fix-permissions
+            - name: fix-jenkins-home
               image: busybox:1.36
               command: ["sh", "-c"]
               args:
@@ -50,9 +49,8 @@ spec:
                 runAsGroup: 0
                 allowPrivilegeEscalation: true
 
-          # Optional but recommended
-          runAsUser: 1000
-          fsGroup: 1000
+          # Optional: set Jenkins URL if needed
+          jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
 
   destination:
     server: https://kubernetes.default.svc
@@ -65,6 +63,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - RespectIgnoreDifferences=true
-
-
-
