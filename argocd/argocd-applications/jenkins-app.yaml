@@ -22,7 +22,7 @@ spec:
           existingClaim: jenkins-pvc
         
         controller:
-          
+          overwriteConfig: true
           adminUser: admin
           adminPassword: admin
           jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
@@ -40,7 +40,7 @@ spec:
                 runAsNonRoot: false
                 runAsGroup: 0
                 allowPrivilegeEscalation: true
-                
+
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
