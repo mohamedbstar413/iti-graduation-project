@@ -23,8 +23,7 @@ spec:
           persistence:
             enabled: true
             existingClaim: jenkins-pvc
-            storageClass: ""
-            
+
           customInitContainers:
             - name: pv-permission-fixer
               image: busybox:latest
