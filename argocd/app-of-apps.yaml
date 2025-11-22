@@ -8,8 +8,8 @@ spec:
     - git:
         repoURL: https://github.com/mohamedbstar413/iti-graduation-project.git
         revision: main
-        directories:
-          - path: argocd/argocd-applications/*
+        files:
+          - path: "argocd/argocd-applications/**/*.yaml"
   template:
     metadata:
       name: '{{path.basename}}'
