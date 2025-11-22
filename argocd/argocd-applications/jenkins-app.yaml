@@ -20,9 +20,8 @@ spec:
           adminPassword: admin
           jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
           
-          persistence:
-            enabled: true
-            existingClaim: jenkins-pvc
+        persistence:
+          existingClaim: jenkins-pvc
 
           customInitContainers:
             - name: pv-permission-fixer
