@@ -18,14 +18,13 @@ spec:
     helm:
       releaseName: jenkins
       values: |
+        persistence:
+          existingClaim: jenkins-pvc
+        
         controller:
-          
           adminUser: admin
           adminPassword: admin
           jenkinsUrl: http://jenkins.jenkins.svc.cluster.local:8080
-          
-        persistence:
-          existingClaim: jenkins-pvc
 
           customInitContainers:
             - name: pv-permission-fixer
