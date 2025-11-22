@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps-application
@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/iti-graduation-project
+    repoURL: https://github.com/mohamedbstar413/iti-graduation-project.git
     targetRevision: main
     path: argocd/argocd-applications
   destination:
