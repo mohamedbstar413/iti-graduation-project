@@ -23,7 +23,9 @@ spec:
         
         controller:
           image:
-            tag: 2.462.1                 # ← REQUIRED for your plugins
+            repository: jenkins/jenkins
+            tag: "lts"  # or your specific version
+            pullPolicy: IfNotPresent
           overwriteConfig: true
           installPlugins: false
           
