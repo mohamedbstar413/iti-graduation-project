@@ -22,10 +22,7 @@ spec:
           existingClaim: jenkins-pvc
         
         controller:
-          image:
-            repository: jenkins/jenkins
-            tag: "lts"  # or your specific version
-            pullPolicy: IfNotPresent
+
           overwriteConfig: true
           installPlugins: false
           
