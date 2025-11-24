@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/mohamedbstar413/iti-graduation-project
-    targetRevision: main
+    targetRevision: HEAD
     chart: k8s/iti-gp-db-chart
     helm:
       releaseName: iti-db-release
