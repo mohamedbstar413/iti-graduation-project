@@ -1,0 +1,27 @@
+persistence:
+  volumeName: local-volume
+  
+  volumeClaimName: jenkins-pvc
+  
+  reclaimPolicy: Delete
+  
+  capacity: 1Gi
+  
+  hostPath:
+    path: /tmp/my-pv
+    type: DirectoryOrCreate
+
+controller:
+  name: mysql
+  
+  serviceName: mysql
+  
+  replicaCount: 1
+  
+  serviceAccountName: db-secret-sa
+  
+  containerName: mysql
+  
+  containerImage: mysql
+  
+  containerPort: 3306
