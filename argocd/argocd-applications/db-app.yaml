@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: db-chart-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-options: SkipPrune=false
+    argocd.argoproj.io/compare-options: IgnoreNormalizedCRDs=true
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mohamedbstar413/iti-graduation-project
+    targetRevision: main
+    chart: k8s/iti-gp-db-chart
+    helm:
+      releaseName: iti-db-release
+        
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: db-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
