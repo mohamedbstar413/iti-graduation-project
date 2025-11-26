@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-app
+spec:
+  type: {{- .Values.service.type . }}
+  ports:
+  - port: {{- .Values.service.port}}
+    targetPort: {{- .Values.controller.port}}
+    {{- if .Values.service.nodePort -}}
+    nodePort: {{- toYaml .Values.service.nodePort . }}
+    {{- end }}
+
+  selector:
+    {{- include "backend.selectorLabels" }}

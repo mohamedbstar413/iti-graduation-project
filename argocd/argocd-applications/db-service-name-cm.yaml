@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: db-service-name-cm
+  namespace: back-ns
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  db-name: bXlzcWw= #for mysql

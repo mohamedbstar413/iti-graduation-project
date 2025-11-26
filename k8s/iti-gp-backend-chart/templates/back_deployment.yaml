@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  namespace: {{ .Values.controller.namespace }}
+spec:
+  replicas: {{ .Values.controller.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backend.selectorLabels" . | nindent 6}}
+  template:
+    metadata:
+      labels:
+        {{- include "backend.selectorLabels" . | nindent 8}}
+    spec:
+      serviceAccountName: {{ .Values.controller.serviceAccountName }}
+      initContainers:
+        - name: secret-mounter #this init container mounts the db-secrets so that the secrets get created before main container
+          image: busybox
+          command: ["sleep", "20"]
+          volumeMounts:
+            - name: secrets
+              mountPath: /mnt/secrets
+        
+      containers:
+      -   name: nginx-container
+          image: nginx
+
+          volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-conf
+              subPath: nginx.conf #mount nginx.conf file only from the volume not the entire volume
+            
+            - mountPath: /usr/share/nginx/html/index.html
+              name: index
+              subPath: index.html
+          
+          ports:
+            - containerPort: 80
+              protocol: TCP
+
+      - name: {{ .Values.controller.containerName }}
+        image: {{ .Values.controller.image }}
+        ports:
+        - containerPort: {{ .Values.controller.port }}
+        env:
+        {{- if .Values.controller.env }}
+        {{- toYaml .Values.controller.env . | nindent 10}}
+        {{- end }}
+        
+        resources:
+        {{- toYaml .Values.controller.resources . | nindent 10}}
+        
+        livenessProbe:
+        {{- toYaml .Values.controller.livenessProbe . | nindent 10 }}
+        
+        readinessProbe:
+        {{- toYaml .Values.controller.readinessProbe . | nindent 10 }}
+      
+      affinity:
+      {{- toYaml .Values.controller.affinity . | nindent 8}}
+      
+      volumes:
+      {{- toYaml .Values.controller.volumes . | nindent 8 }}
+      
+        #- name: secrets # i must mount it so that secretsprovider create the secrets
+        #  csi:
+        #    driver: secrets-store.csi.k8s.io
+        #    readOnly: true
+        #    volumeAttributes: 
+        #      secretProviderClass: "db-secrets"
