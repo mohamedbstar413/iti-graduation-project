@@ -1,7 +1,7 @@
 persistence:
   volumeName: local-volume
   
-  volumeClaimName: jenkins-pvc
+  volumeClaimName: mysql-pvc
   
   reclaimPolicy: Delete
   
