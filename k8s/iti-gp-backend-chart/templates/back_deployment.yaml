@@ -7,11 +7,11 @@ spec:
   replicas: {{ .Values.controller.replicaCount }}
   selector:
     matchLabels:
-{{- include "backend.selectorLabels" . | nindent 6 }}
+      {{- include "backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-{{- include "backend.selectorLabels" . | nindent 8 }}
+        {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ .Values.controller.serviceAccountName }}
       initContainers:
@@ -44,22 +44,22 @@ spec:
             - containerPort: {{ .Values.controller.port }}
           {{- if .Values.controller.env }}
           env:
-{{ .Values.controller.env | nindent 12 }}
+            {{- toYaml .Values.controller.env | nindent 12 }}
           {{- end }}
           
           resources:
-{{ toYaml .Values.controller.resources | nindent 12 }}
+            {{- toYaml .Values.controller.resources | nindent 12 }}
           
           livenessProbe:
-{{ toYaml .Values.controller.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.controller.livenessProbe | nindent 12 }}
           
           readinessProbe:
-{{ .Values.controller.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.controller.readinessProbe | nindent 12 }}
       
       {{- if .Values.controller.affinity }}
       affinity:
-{{ .Values.controller.affinity | nindent 8 }}
+        {{- toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
       
       volumes:
-{{ .Values.controller.volumes | nindent 8 }}
+        {{- toYaml .Values.controller.volumes | nindent 8 }}
