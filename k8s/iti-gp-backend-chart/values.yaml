@@ -62,6 +62,9 @@ controller:
     - name: index
       configMap:
         name: index
+    - name: secrets
+      secret:
+        name: db-secret
 service:
   type: ClusterIP
   port: 5000
