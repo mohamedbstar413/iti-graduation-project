@@ -5,8 +5,8 @@ controller:
 
   containerName: app
   image: iti-gp-image:latest
-  port: 3000
-
+  port: 5000
+  secretsManagerRoleArn: rn:aws:iam::910148268074:role/db_secret_role
   env:
     - name: DB_HOST
       value: mysql.db-ns.svc.cluster.local
@@ -21,10 +21,7 @@ controller:
           name: db-secret
           key: password
     - name: DB_NAME
-      valueFrom:
-        configMapRef:
-          name: db-service-name-cm
-          key: db-name
+      value: iti
   
   resources:
     requests:
@@ -37,13 +34,13 @@ controller:
   livenessProbe:
     httpGet:
       path: /health
-      port: 3000
+      port: 5000
     initialDelaySeconds: 30
   
   readinessProbe:
     httpGet:
       path: /health
-      port: 3000
+      port: 5000
     initialDelaySeconds: 30
   
   affinity:
@@ -67,3 +64,13 @@ controller:
         name: index
 service:
   type: ClusterIP
+  port: 5000
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  cpuUtilization: 70
+
+networkPolicy:
+  enabled: true
