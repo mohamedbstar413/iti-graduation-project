@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: nodejs-app
   namespace: {{ .Values.controller.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: {{ .Values.controller.replicaCount }}
   selector:
@@ -23,21 +25,6 @@ spec:
               mountPath: /mnt/secrets
         
       containers:
-        - name: nginx-container
-          image: nginx
-          volumeMounts:
-            - mountPath: /etc/nginx/nginx.conf
-              name: nginx-conf
-              subPath: nginx.conf
-            
-            - mountPath: /usr/share/nginx/html/index.html
-              name: index
-              subPath: index.html
-          
-          ports:
-            - containerPort: 80
-              protocol: TCP
-
         - name: {{ .Values.controller.containerName }}
           image: {{ .Values.controller.image }}
           ports:

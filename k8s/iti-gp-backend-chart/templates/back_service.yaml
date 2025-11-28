@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: back-service
   namespace: back-ns
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   type: {{ .Values.service.type  }}
   ports:
