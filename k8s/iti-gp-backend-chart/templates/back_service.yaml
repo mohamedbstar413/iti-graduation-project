@@ -4,13 +4,13 @@ metadata:
   name: back-service
   namespace: back-ns
 spec:
-  type: {{- .Values.service.type  }}
+  type: {{ .Values.service.type  }}
   ports:
-  - port: {{- .Values.service.port }}
-    targetPort: {{- .Values.controller.port }}
-    {{- if .Values.service.nodePort -}}
-    nodePort: {{- toYaml .Values.service.nodePort  }}
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.controller.port }}
+    {{- if .Values.service.nodePort }}
+    nodePort: {{ .Values.service.nodePort  }}
     {{- end }}
 
   selector:
-    {{- include "backend.selectorLabels" }}
+    {{- include "backend.selectorLabels" . }}
