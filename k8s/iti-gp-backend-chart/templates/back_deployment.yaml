@@ -16,9 +16,18 @@ spec:
     spec:
       serviceAccountName: {{ .Values.controller.serviceAccountName }}
       initContainers:
-        - name: secret-mounter
+        - name: secret-mounter #mounts aws secrets and waits until mysql starts
           image: busybox
-          command: ["sleep", "20"]
+          command:
+            - sh
+            - -c
+            - |
+              DB_USER=$(cat /mnt/secrets/username)
+              DB_PASSWORD=$(cat /mnt/secrets/password)
+              until mysql -h {{ .Values.database.host }} -P {{ .Values.database.port }} -u $DB_USER -p$DB_PASSWORD -e "SELECT 1"; do
+                echo "Waiting for database..."
+                sleep 5
+              done
           volumeMounts:
             - name: secrets
               mountPath: /mnt/secrets
