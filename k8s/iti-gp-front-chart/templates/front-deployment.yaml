@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: front-deployment
+  namespace: front-ns
+
+spec:
+  replicas: {{ .Values.controller.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "frontend.selectorLabels" }}
+  template:
+    metadata:
+      name: front-pod
+      labels:
+        {{- include "frontend.selectorLabels" }}
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: nginx-config
+              subPath: proxy.conf
+
+        - name: front-container
+          image: {{- .Values.controller.image }}
+          ports:
+            - containerPort: 3000
+      
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: back-service-name-cm
+      

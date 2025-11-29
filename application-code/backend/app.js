@@ -30,7 +30,7 @@ pool.getConnection()
   });
 
 // GET all books
-app.get('/books', async (req, res) => {
+app.get('/api/books', async (req, res) => {
   try {
     const [books] = await pool.query('SELECT * FROM books');
     res.json({
@@ -47,7 +47,7 @@ app.get('/books', async (req, res) => {
 });
 
 // GET single book by ID
-app.get('/books/:id', async (req, res) => {
+app.get('/api/books/:id', async (req, res) => {
   try {
     const [books] = await pool.query(
       'SELECT * FROM books WHERE id = ?',
@@ -74,7 +74,7 @@ app.get('/books/:id', async (req, res) => {
 });
 
 // POST new book
-app.post('/books', async (req, res) => {
+app.post('/api/books', async (req, res) => {
   try {
     const { title, author, isbn, published_year, genre } = req.body;
     

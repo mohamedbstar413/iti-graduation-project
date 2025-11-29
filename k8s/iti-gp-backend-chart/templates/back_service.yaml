@@ -4,7 +4,7 @@ metadata:
   name: back-service
   namespace: back-ns
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   type: {{ .Values.service.type  }}
   ports:
