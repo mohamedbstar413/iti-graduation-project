@@ -1,3 +1,6 @@
+database:
+  host: mysql.db-ns.svc.cluster.local
+  port: 3306
 controller:
   replicaCount: 3
   serviceAccountName: db-secret-sa
@@ -7,9 +10,7 @@ controller:
   port: 5000
   secretsManagerRoleArn: arn:aws:iam::910148268074:role/db_secret_role
 
-  database:
-    host: mysql.db-ns.svc.cluster.local
-    port: 3306
+
   env:
     - name: DB_HOST
       value: mysql.db-ns.svc.cluster.local
