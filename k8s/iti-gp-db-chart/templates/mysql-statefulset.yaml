@@ -16,7 +16,6 @@ spec:
       labels:
         {{- include "db.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Values.controller.serviceAccountName }}
       containers:
       - name: {{ .Values.controller.containerName }}
         image: {{ .Values.controller.containerImage }}
