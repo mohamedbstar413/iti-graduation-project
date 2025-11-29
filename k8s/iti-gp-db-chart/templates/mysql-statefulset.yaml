@@ -21,6 +21,9 @@ spec:
         image: {{ .Values.controller.containerImage }}
         ports:
         - containerPort: {{ .Values.controller.containerPort }}
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: admin123
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
