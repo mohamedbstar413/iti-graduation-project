@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nodejs-app
-  namespace: {{ .Values.controller.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
