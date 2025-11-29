@@ -4,7 +4,7 @@ controller:
   serviceAccountName: db-secret-sa
 
   containerName: app
-  image: iti-gp-image:latest
+  image: bstar999/iti-gp-image:latest
   port: 5000
   secretsManagerRoleArn: rn:aws:iam::910148268074:role/db_secret_role
   env:
