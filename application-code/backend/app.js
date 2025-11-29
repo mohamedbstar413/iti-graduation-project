@@ -1,19 +1,34 @@
-// app.js
 require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise');
+const fs = require('fs');
 const app = express();
 const cors = require('cors');
 
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
+
+// Helper to read secret from file
+function readSecret(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf8').trim();
+  } catch (err) {
+    console.error(`Failed to read secret file ${filePath}:`, err.message);
+    return undefined;
+  }
+}
+
+// Secret file paths (mounted by CSI driver)
+const DB_USER_FILE = '/mnt/secrets/username';
+const DB_PASS_FILE = '/mnt/secrets/password';
+
 // MySQL connection pool
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || 'localhost',
+  user: readSecret(DB_USER_FILE),
+  password: readSecret(DB_PASS_FILE),
+  database: process.env.DB_NAME || 'iti',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -78,7 +93,6 @@ app.post('/api/books', async (req, res) => {
   try {
     const { title, author, isbn, published_year, genre } = req.body;
     
-    // Validation
     if (!title || !author) {
       return res.status(400).json({
         success: false,
