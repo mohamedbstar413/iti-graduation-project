@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodejs-app
+  name: nodejs-app 
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
