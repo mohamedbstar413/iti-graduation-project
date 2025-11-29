@@ -29,20 +29,15 @@ spec:
         image: {{ .Values.controller.containerImage }}
         ports:
         - containerPort: {{ .Values.controller.containerPort }}
-        env:
-            - name: MYSQL_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: username
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: password
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: db-config
+          mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init.sql
+        - name: db-config
+          mountPath: /etc/mysql/my.cnf
+          subPath: my.cnf #mount only my.cnf from this volume
         resources:
           requests:
             memory: 400Mi
@@ -58,12 +53,9 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
       volumes:
-        - name: secrets # i must mount it so that secretsprovider create the secrets
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: "db-secrets"
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pvc
+        - name: db-config
+          configMap:
+            name: db-config
