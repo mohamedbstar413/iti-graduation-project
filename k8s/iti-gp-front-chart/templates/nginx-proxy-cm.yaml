@@ -23,7 +23,7 @@ data:
       }
 
       location / {
-          proxy_pass http://localhost:{{ .Values.controller.port }}
+          proxy_pass http://localhost:{{ .Values.controller.port }};
           # Preserve client information
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
