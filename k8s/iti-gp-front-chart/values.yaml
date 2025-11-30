@@ -8,7 +8,9 @@ controller:
   image: bstar999/iti-gp-front-image:latest
 
   env:
-    REACT_APP_API_URL: http://back-service.back-ns.svc.cluster.local:5000/api
+    - name: REACT_APP_API_URL
+      value: "http://back-service.back-ns.svc.cluster.local:5000/api"
+
 
 service:
   type: LoadBalancer
