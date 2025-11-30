@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: front-deployment
   annotations:
-    argocd.argoprog.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "1"
 
 spec:
   replicas: {{ .Values.controller.replicaCount }}
@@ -15,7 +15,7 @@ spec:
     metadata:
       name: front-pod
       labels:
-        {{- include "frontend.selectorLabels" . }}
+{{- include "frontend.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: nginx
