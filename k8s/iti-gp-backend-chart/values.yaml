@@ -68,10 +68,10 @@ controller:
         name: index
     - name: secrets
       csi:
-      driver: secrets-store.csi.k8s.io
-      readOnly: true
-      volumeAttributes:
-        secretProviderClass: db-secrets
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: db-secrets
 service:
   type: ClusterIP
   port: 5000
