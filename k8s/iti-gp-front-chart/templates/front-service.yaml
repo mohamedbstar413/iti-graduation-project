@@ -14,6 +14,5 @@ spec:
 {{- include "frontend.selectorLabels" . | nindent 4}}
   type: {{- .Values.service.type }}
   ports:
-  ports:
 {{- toYaml .Values.service.ports | nindent 4 }}
 
