@@ -50,6 +50,10 @@ spec:
           
           readinessProbe:
             {{- toYaml .Values.controller.readinessProbe | nindent 12 }}
+          
+          volumeMounts:
+            - name: secrets
+              mountPath: /mnt/secrets
       
       {{- if .Values.controller.affinity }}
       affinity:
