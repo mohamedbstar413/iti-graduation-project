@@ -2,8 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 
 metadata:
-  name: back-service-name-cm
-  namespace: front-ns
+  name: nginx-proxy-cm
   annotations:
     argocd.argoprog.io/sync-wave: "0"
 data:

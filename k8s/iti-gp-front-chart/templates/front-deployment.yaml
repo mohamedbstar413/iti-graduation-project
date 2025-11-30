@@ -3,23 +3,23 @@ kind: Deployment
 
 metadata:
   name: front-deployment
-  namespace: front-ns
+  annotations:
+    argocd.argoprog.io/sync-wave: "1"
 
 spec:
   replicas: {{ .Values.controller.replicaCount }}
   selector:
     matchLabels:
-      {{- include "frontend.selectorLabels" }}
+{{- include "frontend.selectorLabels" .  | nindent 6}}
   template:
     metadata:
       name: front-pod
       labels:
-        {{- include "frontend.selectorLabels" }}
+        {{- include "frontend.selectorLabels" . }}
     spec:
       containers:
         - name: nginx
           image: nginx
-
           ports:
             - containerPort: 80
           volumeMounts:
@@ -28,10 +28,13 @@ spec:
               subPath: proxy.conf
 
         - name: front-container
-          image: {{- .Values.controller.image }}
+          image: {{ .Values.controller.image }}
           ports:
-            - containerPort: 3000
-      
+            - containerPort: {{ .Values.controller.port }}
+{{- if .Values.controller.env }}
+          env:
+{{- toYaml .Values.controller.env | nindent 12 }}
+{{- end }}
       volumes:
         - name: nginx-config
           configMap:

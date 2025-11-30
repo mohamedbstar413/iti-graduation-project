@@ -4,14 +4,16 @@ kind: Service
 metadata:
   name: front-service
   namespace: front-ns
-  {{- if .Values.service.annotations }}
+{{- if .Values.service.annotations }}
   annotations:
-    {{- .Values.service.annotations . }}
-  {{- end }}
+{{- toYaml .Values.service.annotations | nindent 4 }}
+{{- end }}
 
 spec:
   selector:
     {{- include "frontend.selectorLabels" }}
   type: {{- .Values.service.type }}
   ports:
-    {{- .Values.service.ports . }}
+  ports:
+{{- toYaml .Values.service.ports | nindent 4 }}
+

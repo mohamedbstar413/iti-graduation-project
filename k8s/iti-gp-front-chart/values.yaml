@@ -7,6 +7,9 @@ controller:
   replicaCount: 3
   image: bstar999/iti-gp-front-image
 
+  env:
+    REACT_APP_API_URL: http://back-service.back-ns.svc.cluster.local:5000/api
+
 service:
   type: LoadBalancer
   annotations:
