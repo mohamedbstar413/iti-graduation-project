@@ -33,7 +33,7 @@ spec:
             - containerPort: {{ .Values.controller.port }}
 {{- if .Values.controller.env }}
           env:
-{{- toYaml .Values.controller.env | nindent 8 }}
+{{- toYaml .Values.controller.env | nindent 10 }}
 {{- end }}
       volumes:
         - name: nginx-config
