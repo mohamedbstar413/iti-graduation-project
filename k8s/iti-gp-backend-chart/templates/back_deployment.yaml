@@ -45,11 +45,7 @@ spec:
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
           
-          livenessProbe:
-            {{- toYaml .Values.controller.livenessProbe | nindent 12 }}
           
-          readinessProbe:
-            {{- toYaml .Values.controller.readinessProbe | nindent 12 }}
           
           volumeMounts:
             - name: secrets
