@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 
 RUN apk update
-RUN apk add --no-cache mysql-client 
+RUN apk add --no-cache mysql-client
 
 
 EXPOSE 5000

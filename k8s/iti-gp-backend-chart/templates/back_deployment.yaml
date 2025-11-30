@@ -17,11 +17,13 @@ spec:
       serviceAccountName: {{ .Values.controller.serviceAccountName }}
       initContainers:
         - name: secret-mounter #mounts aws secrets and waits until mysql starts
-          image: busybox
+          image: alpine:latest
           command:
             - sh
             - -c
             - |
+              apk update
+              apk add --no-cache mysql-client
               DB_USER=$(cat /mnt/secrets/username)
               DB_PASSWORD=$(cat /mnt/secrets/password)
               until mysql -h {{ .Values.database.host }} -P {{ .Values.database.port }} -u $DB_USER -p$DB_PASSWORD -e "SELECT 1"; do
