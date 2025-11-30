@@ -20,4 +20,4 @@ service:
   ports:
     - protocol: TCP
       port: 80        # Service port
-      targetPort: 3000  # Pod port
+      targetPort: 80  # Pod port
