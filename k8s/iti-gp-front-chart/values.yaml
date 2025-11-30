@@ -5,7 +5,7 @@ backend:
 controller:
   port: 3000
   replicaCount: 3
-  image: bstar999/iti-gp-front-image:latest
+  image: bstar999/iti-gp-image-front:latest
 
   env:
     - name: REACT_APP_API_URL
