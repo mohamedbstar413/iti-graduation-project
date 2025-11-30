@@ -5,7 +5,7 @@ backend:
 controller:
   port: 3000
   replicaCount: 3
-  image: bstar999/iti-gp-front-image
+  image: bstar999/iti-gp-front-image:latest
 
   env:
     REACT_APP_API_URL: http://back-service.back-ns.svc.cluster.local:5000/api
@@ -17,5 +17,5 @@ service:
     #service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-0708835103d04ffed,subnet-08f42402182b2703b"
   ports:
     - protocol: TCP
-      port: 80        # Service port
-      targetPort: 80  # Pod port
+      port: 3000        # Service port
+      targetPort: 3000  # Pod port
