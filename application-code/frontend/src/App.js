@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Plus, Search, X } from 'lucide-react';
 
-const API_URL =  process.env.REACT_APP_API_URL;
+const API_URL =  "/api";
 
 export default function BooksApp() {
   const [books, setBooks] = useState([]);

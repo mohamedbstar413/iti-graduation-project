@@ -7,9 +7,7 @@ controller:
   replicaCount: 3
   image: bstar999/iti-gp-image-front:latest
 
-  env:
-    - name: REACT_APP_API_URL
-      value: "http://back-service.back-ns.svc.cluster.local:5000/api"
+
 
 
 service:
