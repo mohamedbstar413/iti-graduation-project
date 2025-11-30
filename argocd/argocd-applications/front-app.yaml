@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: front-chart-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" #depends on back app 
+    argocd.argoproj.io/sync-options: SkipPrune=false
+    argocd.argoproj.io/compare-options: IgnoreNormalizedCRDs=true
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mohamedbstar413/iti-graduation-project
+    targetRevision: main
+    path: k8s/iti-gp-front-chart
+    helm:
+      releaseName: iti-frontend-release
+        
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: front-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
