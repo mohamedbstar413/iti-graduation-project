@@ -38,5 +38,5 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: back-service-name-cm
+            name: nginx-proxy-cm
       
