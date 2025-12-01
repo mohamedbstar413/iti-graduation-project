@@ -17,7 +17,7 @@ spec:
               name: front-ns
           podSelector:
             matchLabels:
-              {{- include "frontend.selectorLabels" . | nindent 14 }}
+{{- include "frontend.selectorLabels" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: {{ .Values.controller.port }}

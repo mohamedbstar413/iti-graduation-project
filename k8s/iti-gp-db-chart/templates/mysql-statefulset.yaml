@@ -32,7 +32,8 @@ spec:
           subPath: init.sql
         - name: db-config
           mountPath: /etc/mysql/my.cnf
-          subPath: my.cnf #mount only my.cnf from this volume
+          subPath: my.cnf
+
         resources:
           requests:
             memory: 400Mi

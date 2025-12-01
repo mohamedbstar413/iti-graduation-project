@@ -3,7 +3,7 @@ backend:
   port: 5000
 
 controller:
-  port: 3000
+  port: 80
   replicaCount: 3
   image: bstar999/iti-gp-image-front:latest
 
@@ -17,5 +17,5 @@ service:
     #service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-0708835103d04ffed,subnet-08f42402182b2703b"
   ports:
     - protocol: TCP
-      port: 80        # Service port
-      targetPort: 80  # Pod port
+      port: 8080       # Service port
+      targetPort: 8080  # Pod port

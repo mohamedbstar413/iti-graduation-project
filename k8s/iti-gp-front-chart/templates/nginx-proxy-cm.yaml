@@ -8,10 +8,9 @@ metadata:
 data:
   proxy.conf: |
     server {
-      listen 80;
+      listen 8080;
       server_name _;
 
-      # Forward all requests to backend service
       location /api/ {
           proxy_pass http://{{ .Values.backend.host }}:{{ .Values.backend.port }};
 
@@ -21,13 +20,17 @@ data:
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
       }
-
+      
       location / {
           proxy_pass http://localhost:{{ .Values.controller.port }};
+          
           # Preserve client information
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
       }
+      
+      
     }
+
