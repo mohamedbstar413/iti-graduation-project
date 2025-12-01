@@ -1,4 +1,4 @@
-# 🚀 Enterprise Multi-Tier Microservices Platform
+# 🚀 Multi-Tier Microservices Platform Deployment | AWS - EKS - ArgoCd - Jenkins - Terraform - App of Apps Pattern  
 
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
 [![AWS](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
@@ -110,11 +110,11 @@ This project demonstrates a complete enterprise-grade Kubernetes deployment feat
 │  ┌────────────────────────────────────────────────────────────┐ │
 │  │                    AWS Services Integration                 │ │
 │  │                                                              │ │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │ │
-│  │  │   Secrets    │  │     ECR      │  │     IAM      │     │ │
-│  │  │   Manager    │  │  (Container  │  │   (IRSA)     │     │ │
-│  │  │              │  │  Registry)   │  │              │     │ │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘     │ │
+│  │  ┌──────────────┐                    ┌──────────────┐     │ │
+│  │  │   Secrets    │                    │     IAM      │     │ │
+│  │  │   Manager    │                    │   (IRSA)     │     │ │
+│  │  │              │                    │              │     │ │
+│  │  └──────────────┘                    └──────────────┘     │ │
 │  └────────────────────────────────────────────────────────────┘ │
 └───────────────────────────────────────────────────────────────────┘
 ```
@@ -132,7 +132,7 @@ This project demonstrates a complete enterprise-grade Kubernetes deployment feat
 
 ### 🔄 GitOps & Automation
 - **ArgoCD App of Apps Pattern** - Declarative application management
-- **Automated Image Updates** - ECR integration with ArgoCD Image Updater
+- **Automated Image Updates** - Docker integration with ArgoCD Image Updater
 - **Sync Waves** - Orchestrated resource deployment order
 - **Self-Healing** - Automatic drift detection and correction
 - **Jenkins CI/CD** - Automated build and deployment pipelines
