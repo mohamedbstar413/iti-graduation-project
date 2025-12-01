@@ -5,8 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2" #depends on back app 
-    argocd.argoproj.io/sync-options: SkipPrune=false
-    argocd.argoproj.io/compare-options: IgnoreNormalizedCRDs=true
+   
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
