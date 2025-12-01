@@ -355,11 +355,12 @@ kubectl get applications -n argocd -w
 - **Replicas**: 3 (auto-scaling 2-10)
 - **Service Type**: ClusterIP
 - **Features**:
+  - Init Container to wait until mysql is ready
   - HPA based on CPU utilization (70%)
   - AWS Secrets Manager integration
   - Network policies for security
   - Pod anti-affinity rules
-  - Resource requests/limits
+  
 
 ### Database (Namespace: `db-ns`)
 - **Technology**: MySQL 8.0
@@ -368,34 +369,30 @@ kubectl get applications -n argocd -w
 - **Features**:
   - Init containers for secret mounting
   - Network policy (backend-only access)
-  - Resource limits
-  - TCP health checks
+  - 
 
 ### ArgoCD (Namespace: `argocd`)
 - **Components**: Server, Repo Server, Application Controller, Image Updater
 - **Pattern**: App of Apps
 - **Features**:
   - Automated sync and self-heal
-  - ECR integration for image updates
+  - Docker integration for image updates
   - Sync waves for orchestration
-  - Git-based configuration
+  
 
 ### Jenkins (Namespace: `jenkins`)
 - **Storage**: Persistent Volume (1Gi)
 - **Access**: LoadBalancer service
 - **Features**:
   - Custom init container for permissions
-  - Persistent home directory
-  - Plugin pre-configuration
+  - Persistent Volume
 
 ### Monitoring Stack (Namespace: `kube-system`)
 - **Prometheus**: Metrics collection
 - **Grafana**: Visualization dashboards
 - **Features**:
   - Cluster-wide metrics
-  - Application metrics
-  - Custom dashboards
-  - Alert rules
+  
 
 ---
 
@@ -441,12 +438,6 @@ Example Secret Structure:
 - **Application Performance**: Request rates, latency, errors
 - **Resource Usage**: CPU/Memory by namespace and pod
 
-### Access Grafana
-```bash
-kubectl port-forward -n kube-system svc/grafana 3000:80
-# Open http://localhost:3000
-```
-
 ---
 
 ## 🔄 CI/CD Pipeline
@@ -454,18 +445,15 @@ kubectl port-forward -n kube-system svc/grafana 3000:80
 ### Workflow
 ```
 Developer Push → GitHub → Jenkins Build → Docker Build → 
-Push to ECR → ArgoCD Image Updater Detects → Auto Deploy → 
-Health Checks → Production
+Push to Docker → ArgoCD Image Updater Detects → Auto Deploy → 
 ```
 
 ### Jenkins Pipeline Stages
 1. **Checkout** - Pull code from Git
-2. **Build** - Compile application
-3. **Test** - Run unit/integration tests
-4. **Docker Build** - Create container image
-5. **Push to Docker.io** - Upload to AWS registry
-6. **Trigger ArgoCD** - Update image tag in Git
-7. **Send Emain** - Send Email to notify a new build
+2. **Docker Build** - Create container image
+3. **Push to Docker.io** - Upload to AWS registry
+4. **Trigger ArgoCD** - Update image tag in Git
+5. **Send Email** - Send Email to notify a new build
 
 ### ArgoCD Sync Waves
 ```yaml
@@ -499,13 +487,11 @@ targetCPUUtilization: 70%
 topology.kubernetes.io/zone:
   - us-east-1a
   - us-east-1b
-  - us-east-1c
 ```
 
 ### Load Balancing
 - AWS Application Load Balancer for external traffic
 - Kubernetes Services for internal traffic
-- Session affinity support
 
 
 ---
