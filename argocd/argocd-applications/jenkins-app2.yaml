@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jenkins-app
+  name: jenkins-app2
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2" # as it depends on jenkins-pv and jenkins-pvc
@@ -12,18 +12,25 @@ spec:
   project: default
   source:
     repoURL: https://charts.jenkins.io
-    targetRevision: 4.7.2
+    targetRevision: 5.8.89  # Updated to latest stable
     chart: jenkins
     helm:
-      releaseName: jenkins
+      releaseName: jenkins2
       values: |
         persistence:
           existingClaim: jenkins-pvc
         
         controller:
-
+          imageTag: "2.492.1"  # Latest Jenkins LTS; override if you prefer a specific version
           overwriteConfig: true
           installPlugins: false
+          resources:  # Added for stability
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
           
           adminUser: admin
           adminPassword: admin
@@ -45,10 +52,11 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: jenkins
+    namespace: jenkins2
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - Replace=true  # Helps with upgrade conflicts
