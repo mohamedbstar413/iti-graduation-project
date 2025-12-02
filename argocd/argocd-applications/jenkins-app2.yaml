@@ -45,7 +45,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: jenkins2
+    namespace: jenkins
   syncPolicy:
     automated:
       prune: true

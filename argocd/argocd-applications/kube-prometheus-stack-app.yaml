@@ -9,12 +9,12 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io   # ensures clean deletion
 spec:
-  project: default            # change if you use custom AppProjects
+  project: default            
 
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 68.2.1      # check latest: https://github.com/prometheus-community/helm-charts/releases
+    targetRevision: 68.2.1      
     helm:
       releaseName: kube-prometheus-stack
       values: |
@@ -65,10 +65,10 @@ spec:
         # -----------------------------
         grafana:
           enabled: true
-          adminPassword: "change-me-please"   # will be stored in secret, better to use external secret
+          adminPassword: "change-me-please"
           ingress:
             enabled: true
-            ingressClassName: nginx           # or traefik, etc.
+            ingressClassName: nginx           
             hosts:
               - grafana.yourdomain.com
             annotations:
