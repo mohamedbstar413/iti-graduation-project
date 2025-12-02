@@ -14,6 +14,7 @@ spec:
     targetRevision: 65.0.0
     helm:
       releaseName: monitoring
+      skipCrds: true           # <==== IMPORTANT
       values: |
         grafana:
           service:
@@ -25,3 +26,6 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
+      - Validate=false
+      - SkipCrds=true          # <==== IMPORTANT
