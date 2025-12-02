@@ -3,7 +3,6 @@ kind: Service
 
 metadata:
   name: front-service
-  namespace: front-ns
 {{- if .Values.service.annotations }}
   annotations:
 {{- toYaml .Values.service.annotations | nindent 4 }}
