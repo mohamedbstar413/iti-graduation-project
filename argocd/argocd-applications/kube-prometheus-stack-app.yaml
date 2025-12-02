@@ -14,7 +14,6 @@ spec:
     targetRevision: 65.0.0
     helm:
       releaseName: monitoring
-      skipCrds: true           # <==== IMPORTANT
       values: |
         grafana:
           service:
@@ -26,6 +25,5 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
-      - Validate=false
-      - SkipCrds=true          # <==== IMPORTANT
+      - Replace=true  # This fixes the annotation size issue
+      - ServerSideApply=true  # Optional but recommended for large resources
