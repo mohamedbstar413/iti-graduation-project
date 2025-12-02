@@ -2,33 +2,109 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kube-prometheus-stack
-  namespace: argocd
+  namespace: argocd          # namespace where ArgoCD is installed
+  labels:
+    app.kubernetes.io/name: kube-prometheus-stack
+    app.kubernetes.io/part-of: monitoring
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # ensures clean deletion
 spec:
-  project: default
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: monitoring
+  project: default            # change if you use custom AppProjects
+
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 65.0.0
+    targetRevision: 68.2.1      # check latest: https://github.com/prometheus-community/helm-charts/releases
     helm:
-      releaseName: monitoring
+      releaseName: kube-prometheus-stack
       values: |
-        grafana:
-          service:
-            type: LoadBalancer
+        # -----------------------------
+        # Common customizations
+        # -----------------------------
+        nameOverride: kube-prometheus-stack
+        fullnameOverride: kube-prometheus-stack
+
+        # Namespace where everything will be installed
+        namespaceOverride: monitoring
+
+        # Clean up old resources when upgrading
+        cleanupCustomResource: true
+
+        # -----------------------------
+        # Prometheus
+        # -----------------------------
         prometheus:
-          service:
-            type: LoadBalancer
+          prometheusSpec:
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            retention: 15d
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 50Gi
+
+        # -----------------------------
+        # Alertmanager (optional: disable if you don't need it)
+        # -----------------------------
+        alertmanager:
+          enabled: true
+          alertmanagerSpec:
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+
+        # -----------------------------
+        # Grafana
+        # -----------------------------
+        grafana:
+          enabled: true
+          adminPassword: "change-me-please"   # will be stored in secret, better to use external secret
+          ingress:
+            enabled: true
+            ingressClassName: nginx           # or traefik, etc.
+            hosts:
+              - grafana.yourdomain.com
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-prod
+            tls:
+              - secretName: grafana-tls
+                hosts:
+                  - grafana.yourdomain.com
+          persistence:
+            enabled: true
+            size: 10Gi
+
+        # -----------------------------
+        # Disable components you don't want
+        # -----------------------------
+        kubeStateMetrics:
+          enabled: true
+        prometheusNodeExporter:
+          enabled: true
+        prometheusOperator:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring        # will be created automatically if missing
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
-      - Replace=true
-      - ServerSideApply=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:
