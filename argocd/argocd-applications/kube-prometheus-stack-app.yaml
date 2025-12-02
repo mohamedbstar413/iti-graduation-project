@@ -8,11 +8,10 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
-  
   source:
-    repoURL: oci://ghcr.io/prometheus-community/charts
-    chart: kube-prometheus-stack
-    targetRevision: 65.0.0
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    path: charts/kube-prometheus-stack
+    targetRevision: kube-prometheus-stack-65.0.0  # Use specific chart tag
     helm:
       releaseName: monitoring
       values: |
@@ -26,5 +25,5 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
-      - Replace=true  # This fixes the annotation size issue
-      - ServerSideApply=true  # Optional but recommended for large resources
+      - Replace=true
+      - ServerSideApply=true
