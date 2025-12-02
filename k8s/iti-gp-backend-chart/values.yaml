@@ -8,7 +8,7 @@ controller:
   containerName: app
   image: bstar999/iti-gp-image-back:latest
   port: 5000
-  secretsManagerRoleArn: arn:aws:iam::910148268074:role/db_secret_role
+  secretsManagerRoleArn: arn:aws:iam::113221193568:role/db_secret_role
 
 
   env:
