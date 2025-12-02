@@ -14,4 +14,4 @@ spec:
     {{- end }}
 
   selector:
-    {{- include "backend.selectorLabels" . }}
+{{- include "backend.selectorLabels" . | nindent 4}}
